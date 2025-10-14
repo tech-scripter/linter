@@ -28,7 +28,7 @@ jobs:
           curl -H "Authorization: token ${{ secrets.GO_REPO_TOKEN }}" \
              -H "Accept: application/vnd.github.v3.raw" \
              -o .golangci.yml \
-             https://api.github.com/repos/your-org/.github/contents/.golangci.yml
+             https://api.github.com/repos/tech-scripter/linter/contents/golangci.yml
 
       - name: Set up git for private modules
         run: |
