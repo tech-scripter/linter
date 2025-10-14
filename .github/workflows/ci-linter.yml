@@ -26,9 +26,8 @@ jobs:
       - name: Download shared golangci config
         run: |
           curl -H "Authorization: token ${{ secrets.GO_REPO_TOKEN }}" \
-             -H "Accept: application/vnd.github.v3.raw" \
              -o .golangci.yml \
-             https://api.github.com/repos/tech-scripter/linter/contents/golangci.yml
+             https://raw.githubusercontent.com/tech-scripter/linter/main/golangci.yml
 
       - name: Set up git for private modules
         run: |
