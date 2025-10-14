@@ -1,0 +1,50 @@
+name: Go Lint
+
+on:
+  workflow_call:
+    inputs:
+      go-version-file:
+        description: 'Path to go.mod file'
+        required: false
+        default: 'go.mod'
+        type: string
+      working-directory:
+        description: 'Working directory'
+        required: false
+        default: '.'
+        type: string
+    secrets:
+      GO_REPO_TOKEN:
+        required: true
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+
+      - name: Download shared golangci config
+        run: |
+          curl -H "Authorization: token ${{ secrets.GO_REPO_TOKEN }}" \
+             -H "Accept: application/vnd.github.v3.raw" \
+             -o .golangci.yml \
+             https://api.github.com/repos/your-org/.github/contents/.golangci.yml
+
+      - name: Set up git for private modules
+        run: |
+          git config --global url."https://${{ secrets.GO_REPO_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+
+      - name: Download Go modules
+        working-directory: ${{ inputs.working-directory }}
+        run: go mod download
+
+      - name: Run Linter
+        uses: reviewdog/action-golangci-lint@v2
+        with:
+          level: info
+          fail_level: error
+          go_version_file: ${{ inputs.go-version-file }}
+          github_token: ${{ secrets.GO_REPO_TOKEN }}
+          reporter: github-pr-review
+          golangci_lint_flags: "--timeout 5m"
+          workdir: ${{ inputs.working-directory }}
