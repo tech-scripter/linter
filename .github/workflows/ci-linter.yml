@@ -28,12 +28,9 @@ jobs:
         with:
           repository: tech-scripter/linter
           token: ${{ secrets.GO_REPO_TOKEN }}
-          path: .linter-config
           sparse-checkout: |
             golangci.yml
-
-      - name: Copy config
-        run: cp .linter-config/golangci.yml .golangci.yml
+          sparse-checkout-cone-mode: false
 
       - name: Set up git for private modules
         run: |
