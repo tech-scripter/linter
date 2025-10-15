@@ -23,11 +23,17 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v5
 
-      - name: Download shared golangci config
-        run: |
-          curl -H "Authorization: token ${{ secrets.GO_REPO_TOKEN }}" \
-             -o .golangci.yml \
-             https://raw.githubusercontent.com/tech-scripter/linter/main/golangci.yml
+      - name: Check out shared config repo
+        uses: actions/checkout@v5
+        with:
+          repository: tech-scripter/linter
+          token: ${{ secrets.GO_REPO_TOKEN }}
+          path: .linter-config
+          sparse-checkout: |
+            golangci.yml
+
+      - name: Copy config
+        run: cp .linter-config/golangci.yml .golangci.yml
 
       - name: Set up git for private modules
         run: |
