@@ -15,17 +15,20 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Check out code from ${{ github.repository }}'
+      - name: Check out code
         uses: actions/checkout@v5
 
-      - name: Check out code from ${{ github.repository }}
+      - name: Check out shared config repo
         uses: actions/checkout@v5
         with:
           repository: tech-scripter/linter
           token: ${{ secrets.GO_REPO_TOKEN }}
+          path: .linter-config
           sparse-checkout: |
             golangci.yml
-          sparse-checkout-cone-mode: false
+
+      - name: Copy config to root
+        run: cp .linter-config/golangci.yml ./golangci.yml
 
       - name: Set up Go
         uses: actions/setup-go@v5
