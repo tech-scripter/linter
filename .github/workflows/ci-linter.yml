@@ -32,6 +32,12 @@ jobs:
             golangci.yml
           sparse-checkout-cone-mode: false
 
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ inputs.go-version-file }}
+          cache: false
+
       - name: Set up git for private modules
         run: |
           git config --global url."https://${{ secrets.GO_REPO_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
